@@ -588,11 +588,13 @@ def compile_module(code, code_hash, base_dir, compile_flags=None):
         if windows:
             compile_cmd = ['cl.exe', '/c', '/EHsc'] + compiler_config['flags'].split()
             compile_cmd += [*extra_flags, src_file, '/Fo' + object_file]
+            compile_cmd.remove('-fopenmp')
             run_compile_step(compile_cmd)
         else:
             with atomic_file_write(object_file) as file_name:
                 compile_cmd = [compiler_config['command'], '-c'] + compiler_config['flags'].split()
                 compile_cmd += [*extra_flags, '-o', file_name, src_file]
+                compile_cmd.remove('-fopenmp')
                 run_compile_step(compile_cmd)
 
         # Linking
